@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Gate;
 use App\Models\Asset;
 use App\Observers\AssetObserver;
 
+use Illuminate\Validation\Rules\Password;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -22,6 +24,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Password::defaults(function () {
+            return Password::min(8)
+                ->letters()
+                ->mixedCase()
+                ->numbers()
+                ->symbols()
+                ->uncompromised();
+        });
+
         Gate::before(function ($user, $ability) {
             return $user->isSuperAdmin() ? true : null;
         });

@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             ShieldSeeder::class,
+            DummyDataSeeder::class,
         ]);
 
         // 1. Create Default Unit

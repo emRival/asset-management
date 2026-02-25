@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: asset-management-app
+    container_name: asset-management-app
+    restart: unless-stopped
+    volumes:
+      - ./:/var/www
+    networks:
+      - asset-network
+
+  webserver:
+    image: nginx:alpine
+    container_name: asset-management-webserver
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - asset-network
+    depends_on:
+      - app
+
+  db:
+    image: mysql:8.0
+    container_name: asset-management-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-asset_management}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-password}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-password}
+      MYSQL_USER: ${DB_USERNAME:-asset_user}
+    volumes:
+      - db-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - asset-network
+
+networks:
+  asset-network:
+    driver: bridge
+
+volumes:
+  db-data:
