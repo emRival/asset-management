@@ -20,8 +20,9 @@ RUN apt-get update && apt-get install -y \
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) pdo_mysql mbstring exif pcntl bcmath gd intl zip opcache
 
-# Copy OPcache configuration
+# Copy OPcache and Uploads configuration
 COPY docker/php/opcache.ini /usr/local/etc/php/conf.d/custom-opcache.ini
+COPY docker/php/uploads.ini /usr/local/etc/php/conf.d/custom-uploads.ini
 
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
