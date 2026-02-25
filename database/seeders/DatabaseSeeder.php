@@ -19,8 +19,13 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             ShieldSeeder::class,
-            DummyDataSeeder::class,
         ]);
+
+        if (class_exists(\Faker\Factory::class)) {
+            $this->call([
+                DummyDataSeeder::class,
+            ]);
+        }
 
         // 1. Create Default Unit
         $unit = Unit::firstOrCreate([
