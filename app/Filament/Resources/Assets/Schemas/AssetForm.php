@@ -58,6 +58,7 @@ class AssetForm
                     ->schema([
                         SpatieMediaLibraryFileUpload::make('asset_images')
                             ->collection('asset_images')
+                            ->disk('public')
                             ->multiple()
                             ->image()
                             ->imageResizeMode('cover')

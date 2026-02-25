@@ -86,6 +86,7 @@ class AssetsTable
                             ->required(),
                         SpatieMediaLibraryFileUpload::make('proof_image')
                             ->collection('asset_images')
+                            ->disk('public')
                             ->image()
                             ->imageResizeMode('cover')
                             ->imageCropAspectRatio('16:9')

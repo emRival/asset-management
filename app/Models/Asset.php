@@ -61,6 +61,7 @@ class Asset extends Model implements HasMedia
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('asset_images')
+            ->useDisk('public')
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp']);
     }
 
