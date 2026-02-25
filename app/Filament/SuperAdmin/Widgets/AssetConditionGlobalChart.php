@@ -12,7 +12,7 @@ class AssetConditionGlobalChart extends ChartWidget
 
     protected function getData(): array
     {
-        $conditions = Asset::selectRaw('condition, count(*) as count')->groupBy('condition')->get();
+        $conditions = Asset::select('condition', \Illuminate\Support\Facades\DB::raw('count(*) as count'))->groupBy('condition')->get();
         $labels = $conditions->pluck('condition')->map(fn($c) => ucfirst($c))->toArray();
         $data = $conditions->pluck('count')->toArray();
 
