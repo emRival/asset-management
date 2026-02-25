@@ -34,7 +34,8 @@ class RegisterUnit extends RegisterTenant
     {
         $unit = Unit::create($data);
 
-        $unit->users()->attach(auth()->user());
+        // Super Admin creates the unit, they already have global access via getTenants()
+        // No need to change their primary unit_id.
 
         return $unit;
     }
