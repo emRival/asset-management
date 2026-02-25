@@ -12,12 +12,13 @@ RUN apt-get update && apt-get install -y \
     libjpeg62-turbo-dev \
     libfreetype6-dev \
     libicu-dev \
+    libwebp-dev \
     zip \
     unzip \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions efficiently using all CPU cores
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install -j$(nproc) pdo_mysql mbstring exif pcntl bcmath gd intl zip opcache
 
 # Copy OPcache and Uploads configuration
