@@ -28,7 +28,8 @@ class SecurityHeaders
 
             // A permissive but solid CSP that works with Filament/AlpineJS/Livewire
             $csp = "default-src 'self'; " .
-                "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdn.jsdelivr.net https://static.cloudflareinsights.com; " . // unsafe-eval needed for alpine/livewire sometimes
+                "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdn.jsdelivr.net https://static.cloudflareinsights.com; " .
+                "worker-src 'self' blob:; " .
                 "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " .
                 "img-src 'self' data: https: blob:; " .
                 "font-src 'self' https://fonts.gstatic.com data:; " .
