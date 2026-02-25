@@ -1,0 +1,9 @@
+.git
+.env
+.phpunit.cache
+/node_modules
+/vendor
+/storage/*.key
+docker-compose.yml
+test-docker.Dockerfile
+*.md
