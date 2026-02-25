@@ -85,9 +85,9 @@ class FirewallProtection
             '/<script\b[^>]*>(.*?)<\/script>/is', // Basic XSS
             '/on(?:click|load|error|mouseover|submit)\s*=/i', // XSS Event handlers
             '/(?:javascript|vbscript|data):/i', // Dangerous URI schemes
-            '/(?:\$\(|`|\|\s*[\w]+|;\s*[\w]+|&&\s*[\w]+)/i', // Command injection
+            '/(?:\$\(|\b(?:wget|curl|bash|sh|nc|ncat|netcat)\b)/i', // Command injection
             '/(?:eval|exec|system|passthru|shell_exec|popen)\s*\(/i', // PHP execution functions
-            '/O:\d+:"[^"]+":/i', // PHP Deserialization
+            '/O:\d+:"[^"]+":\d+:/i', // PHP Deserialization
             '/file:\/\/|gopher:\/\/|dict:\/\/|ldap:\/\//i', // SSRF protocols
             '/(?:\.\.\/|\.\.%2f)/i', // Path traversal
         ];
@@ -102,6 +102,7 @@ class FirewallProtection
 
             foreach ($patterns as $pattern) {
                 if (preg_match($pattern, (string) $value)) {
+                    \Illuminate\Support\Facades\Log::warning('Firewall triggered', ['pattern' => $pattern, 'value' => $value]);
                     return true;
                 }
             }
