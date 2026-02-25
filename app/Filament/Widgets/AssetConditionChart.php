@@ -17,7 +17,7 @@ class AssetConditionChart extends ChartWidget
 
         // Count assets grouped by their condition
         $conditions = Asset::where('unit_id', $tenantId)
-            ->selectRaw('condition, count(*) as count')
+            ->select('condition', \Illuminate\Support\Facades\DB::raw('count(*) as count'))
             ->groupBy('condition')
             ->pluck('count', 'condition')
             ->toArray();
