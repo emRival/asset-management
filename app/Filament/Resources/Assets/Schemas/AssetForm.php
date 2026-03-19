@@ -22,11 +22,19 @@ class AssetForm
                     ->description('Assign the asset to a division and category.')
                     ->schema([
                         Select::make('division_id')
-                            ->relationship('division', 'name')
+                            ->relationship(
+                                name: 'division', 
+                                titleAttribute: 'name',
+                                modifyQueryUsing: fn(Builder $query) => 
+                                    auth()->user()->isSuperAdmin() || auth()->user()->hasGlobalPermission('manage_any_division')
+                                        ? $query 
+                                        : $query->where('unit_id', \Filament\Facades\Filament::getTenant()?->id ?? auth()->user()->unit_id)
+                                                ->where('id', auth()->user()->division_id ?? -1)
+                            )
                             ->required()
                             ->live()
                             ->default(fn() => auth()->user()->division_id)
-                            ->disabled(fn() => !auth()->user()->hasRole(['super_admin', 'unit_leader']) && !auth()->user()->can('create_all_divisions') && auth()->user()->division_id !== null)
+                            ->disabled(fn() => !auth()->user()->hasGlobalPermission('manage_any_division'))
                             ->dehydrated(),
                         Select::make('category_id')
                             ->relationship('category', 'name', modifyQueryUsing: fn(Builder $query, Get $get) => $get('division_id') ? $query->where('division_id', $get('division_id')) : $query)

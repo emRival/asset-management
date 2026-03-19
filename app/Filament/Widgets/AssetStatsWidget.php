@@ -12,10 +12,11 @@ class AssetStatsWidget extends BaseWidget
 {
     use HasWidgetShield;
     protected static ?int $sort = 1;
+    protected int | string | array $columnSpan = 'full';
 
     protected function getStats(): array
     {
-        $tenantId = Filament::getTenant()->id;
+        $tenantId = Filament::getTenant()?->id ?? auth()->user()->unit_id;
 
         return [
             Stat::make('Total Assets', Asset::where('unit_id', $tenantId)->count())

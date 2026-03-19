@@ -19,7 +19,7 @@ class LatestGlobalAssetsWidget extends BaseWidget
         return $table
             ->query(
                 fn(): Builder =>
-                Asset::query()->latest()->limit(5)
+                Asset::query()->latest()->limit(10)
             )
             ->paginated(false)
             ->heading('Global Asset Feed (Latest 5)')

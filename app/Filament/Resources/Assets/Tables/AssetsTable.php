@@ -34,6 +34,7 @@ class AssetsTable
                 TextColumn::make('asset_code')
                     ->searchable()
                     ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->weight('bold'),
                 TextColumn::make('name')
                     ->searchable()
@@ -56,14 +57,16 @@ class AssetsTable
                     })
                     ->searchable(),
                 TextColumn::make('created_at')
+                    ->label('Created At')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(),
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 //
             ])

@@ -104,4 +104,45 @@ class User extends Authenticatable implements HasTenants, FilamentUser
         }
         return true;
     }
+
+    /**
+     * Check for a permission by direct database query, bypassing Spatie's team scoping.
+     * This is more reliable in multi-tenant Filament setups.
+     */
+    public function hasPermissionScoped(string $permission): bool
+    {
+        if ($this->isSuperAdmin()) {
+            return true;
+        }
+
+        return \Illuminate\Support\Facades\DB::table('role_has_permissions')
+            ->join('permissions', 'permissions.id', '=', 'role_has_permissions.permission_id')
+            ->join('model_has_roles', 'model_has_roles.role_id', '=', 'role_has_permissions.role_id')
+            ->where('model_has_roles.model_id', $this->id)
+            ->where('model_has_roles.model_type', static::class)
+            ->where('permissions.name', $permission)
+            ->where(function ($query) {
+                $tenantId = \Filament\Facades\Filament::getTenant()?->id;
+                if ($tenantId) {
+                    $query->where('model_has_roles.unit_id', $tenantId)
+                        ->orWhereNull('model_has_roles.unit_id');
+                }
+            })
+            ->exists();
+    }
+
+    public function hasGlobalPermission(string $permission): bool
+    {
+        if ($this->isSuperAdmin()) {
+            return true;
+        }
+
+        return \Illuminate\Support\Facades\DB::table('model_has_roles')
+            ->join('role_has_permissions', 'model_has_roles.role_id', '=', 'role_has_permissions.role_id')
+            ->join('permissions', 'permissions.id', '=', 'role_has_permissions.permission_id')
+            ->where('model_has_roles.model_id', $this->id)
+            ->where('model_has_roles.model_type', static::class)
+            ->where('permissions.name', $permission)
+            ->exists();
+    }
 }

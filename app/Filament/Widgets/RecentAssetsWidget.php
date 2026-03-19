@@ -13,7 +13,7 @@ use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 class RecentAssetsWidget extends BaseWidget
 {
     use HasWidgetShield;
-    protected static ?int $sort = 3;
+    protected static ?int $sort = 5;
     protected int|string|array $columnSpan = 'full';
     protected static ?string $heading = 'Recently Added Assets';
 

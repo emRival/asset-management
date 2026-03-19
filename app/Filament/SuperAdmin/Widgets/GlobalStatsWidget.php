@@ -18,27 +18,34 @@ class GlobalStatsWidget extends BaseWidget
         return [
             Stat::make('Total Units', Unit::count())
                 ->description('Registered organizational units')
-                ->descriptionIcon('heroicon-m-arrow-trending-up')
-                ->chart([2, 3, 5, 7, 8, 10, 12])
+                ->descriptionIcon('heroicon-m-building-office-2')
+                ->chart($this->getTrend(Unit::class))
                 ->color('primary'),
 
             Stat::make('Total Divisions', Division::count())
                 ->description('Active divisions across units')
-                ->descriptionIcon('heroicon-m-arrow-trending-up')
-                ->chart([1, 4, 3, 8, 7, 12, 16])
+                ->descriptionIcon('heroicon-m-user-group')
+                ->chart($this->getTrend(Division::class))
                 ->color('success'),
 
             Stat::make('Total Categories', Category::count())
                 ->description('Asset classifications')
-                ->descriptionIcon('heroicon-m-arrow-trending-up')
-                ->chart([5, 8, 6, 12, 14, 18, 22])
+                ->descriptionIcon('heroicon-m-tag')
+                ->chart($this->getTrend(Category::class))
                 ->color('warning'),
 
             Stat::make('Total Assets', Asset::count())
                 ->description('Total physical items tracked system-wide')
-                ->descriptionIcon('heroicon-m-arrow-trending-up')
-                ->chart([10, 25, 40, 35, 60, 85, 120])
+                ->descriptionIcon('heroicon-m-cube')
+                ->chart($this->getTrend(Asset::class))
                 ->color('danger'),
         ];
+    }
+
+    private function getTrend(string $model): array
+    {
+        return collect(range(0, 6))->map(function ($i) use ($model) {
+            return $model::whereDate('created_at', now()->subDays($i))->count();
+        })->reverse()->values()->toArray();
     }
 }

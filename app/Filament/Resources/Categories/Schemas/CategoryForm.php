@@ -19,7 +19,15 @@ class CategoryForm
                     ->description('Organize categories within divisions.')
                     ->schema([
                         Select::make('division_id')
-                            ->relationship('division', 'name')
+                            ->relationship(
+                                name: 'division', 
+                                titleAttribute: 'name',
+                                modifyQueryUsing: fn(\Illuminate\Database\Eloquent\Builder $query) => 
+                                    auth()->user()->isSuperAdmin() || auth()->user()->hasGlobalPermission('manage_any_division')
+                                        ? $query 
+                                        : $query->where('unit_id', \Filament\Facades\Filament::getTenant()?->id ?? auth()->user()->unit_id)
+                                                ->where('id', auth()->user()->division_id ?? -1)
+                            )
                             ->required()
                             ->searchable()
                             ->preload(),

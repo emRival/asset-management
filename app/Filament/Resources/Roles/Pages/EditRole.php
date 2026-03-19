@@ -26,17 +26,16 @@ class EditRole extends EditRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
-        $this->permissions = collect($data)
-            ->filter(fn (mixed $permission, string $key): bool => ! in_array($key, ['name', 'guard_name', 'select_all', Utils::getTenantModelForeignKey()]))
+        $this->permissions = collect(\Illuminate\Support\Arr::dot($data))
+            ->filter(fn ($value, $key) => is_string($value) && str_contains($value, ':'))
             ->values()
-            ->flatten()
             ->unique();
 
         if (Utils::isTenancyEnabled() && Arr::has($data, Utils::getTenantModelForeignKey()) && filled($data[Utils::getTenantModelForeignKey()])) {
-            return Arr::only($data, ['name', 'guard_name', Utils::getTenantModelForeignKey()]);
+            return Arr::only($data, ['name', 'guard_name', 'manage_any_division', Utils::getTenantModelForeignKey()]);
         }
 
-        return Arr::only($data, ['name', 'guard_name']);
+        return Arr::only($data, ['name', 'guard_name', 'manage_any_division']);
     }
 
     protected function afterSave(): void
@@ -51,5 +50,18 @@ class EditRole extends EditRecord
 
         // @phpstan-ignore-next-line
         $this->record->syncPermissions($permissionModels);
+
+        if (array_key_exists('manage_any_division', $this->data)) {
+            $permission = Utils::getPermissionModel()::firstOrCreate([
+                'name' => 'manage_any_division',
+                'guard_name' => $this->data['guard_name'] ?? Utils::getFilamentAuthGuard(),
+            ]);
+
+            if ($this->data['manage_any_division']) {
+                $this->record->givePermissionTo($permission);
+            } else {
+                $this->record->revokePermissionTo($permission);
+            }
+        }
     }
 }

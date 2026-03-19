@@ -40,7 +40,7 @@ class AppServiceProvider extends ServiceProvider
         if (!app()->runningInConsole()) {
             try {
                 \Spatie\Permission\Models\Permission::firstOrCreate([
-                    'name' => 'create_all_divisions',
+                    'name' => 'manage_any_division',
                     'guard_name' => 'web'
                 ]);
             } catch (\Exception $e) {

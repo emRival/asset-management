@@ -11,7 +11,7 @@ class AssetConditionChart extends ChartWidget
 {
     use HasWidgetShield;
     protected ?string $heading = 'Asset Conditions';
-    protected static ?int $sort = 2;
+    protected static ?int $sort = 3;
 
     protected function getData(): array
     {

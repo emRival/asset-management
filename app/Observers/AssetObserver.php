@@ -12,6 +12,14 @@ class AssetObserver
      */
     public function creating(Asset $asset): void
     {
+        // Ensure unit_id is synced from division if it's not set correctly
+        if (!$asset->unit_id && $asset->division_id) {
+            $division = \App\Models\Division::find($asset->division_id);
+            if ($division) {
+                $asset->unit_id = $division->unit_id;
+            }
+        }
+
         // Generate Asset Code: UNIT-DIV-PREFIX-001
         $unit = $asset->unit; // Usually assigned by Tenancy or Form
         $division = $asset->division;

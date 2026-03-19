@@ -68,6 +68,10 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->userMenuItems([
                 \Filament\Navigation\MenuItem::make()
+                    ->label(fn() => 'Division: ' . (auth()->user()->division?->name ?? (auth()->user()->isSuperAdmin() ? 'All Divisions' : 'No Division')))
+                    ->icon('heroicon-o-building-office-2')
+                    ->url('#'),
+                \Filament\Navigation\MenuItem::make()
                     ->label('Super Admin Panel')
                     ->icon('heroicon-o-shield-check')
                     ->url('/super-admin')
