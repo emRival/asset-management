@@ -13,3 +13,7 @@ Route::get('/assets/print-qr', function () {
 })->middleware(['auth'])->name('assets.print-qr');
 
 Route::get('/track/{asset_code}', [\App\Http\Controllers\AssetTrackingController::class, 'show'])->name('track.asset');
+
+Route::get('/login', function () {
+    return redirect()->route('filament.admin.auth.login');
+})->name('login');

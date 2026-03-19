@@ -37,6 +37,16 @@ class AppServiceProvider extends ServiceProvider
             return $user->isSuperAdmin() ? true : null;
         });
 
+        if (!app()->runningInConsole()) {
+            try {
+                \Spatie\Permission\Models\Permission::firstOrCreate([
+                    'name' => 'create_all_divisions',
+                    'guard_name' => 'web'
+                ]);
+            } catch (\Exception $e) {
+            }
+        }
+
         Asset::observe(AssetObserver::class);
     }
 }
