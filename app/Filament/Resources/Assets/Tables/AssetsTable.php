@@ -119,11 +119,11 @@ class AssetsTable
                         ->label('Print QR Codes')
                         ->icon('heroicon-o-printer')
                         ->deselectRecordsAfterCompletion()
-                        ->url(function (Collection $records) {
+                        ->action(function (BulkAction $action, Collection $records) {
                             $ids = $records->pluck('id')->join(',');
-                            return route('assets.print-qr', ['ids' => $ids]);
-                        })
-                        ->openUrlInNewTab(),
+                            $url = route('assets.print-qr', ['ids' => $ids]);
+                            $action->js("window.open('$url', '_blank')");
+                        }),
                     DeleteBulkAction::make(),
                 ]),
             ]);

@@ -101,21 +101,36 @@
             font-weight: 800;
             line-height: 1.25;
             display: -webkit-box;
-            -webkit-line-clamp: 3;
+            -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
             color: #111827;
         }
 
+        .asset-info {
+            font-size: 10px;
+            color: #4b5563;
+            margin-top: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
         .asset-code {
             font-family: monospace;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             background: #f3f4f6;
-            padding: 4px 8px;
+            padding: 2px 6px;
             border-radius: 4px;
             display: inline-block;
-            margin-top: 8px;
+            margin-top: 6px;
             color: #374151;
         }
 
@@ -170,8 +185,16 @@
             <div class="label-card">
                 <div class="label-content">
                     <div>
-                        <div class="label-header">{{ config('app.name', 'Asset Management') }}</div>
+                        <div class="label-header">{{ config('app.name', 'AMS') }}</div>
                         <div class="asset-name">{{ $asset->name }}</div>
+                        <div class="asset-info">
+                            <div class="info-item">
+                                <b>Loc:</b> {{ $asset->location ?? '-' }}
+                            </div>
+                            <div class="info-item">
+                                <b>Date:</b> {{ $asset->created_at->format('d/m/Y') }}
+                            </div>
+                        </div>
                     </div>
                     <div>
                         <div class="asset-code">{{ $asset->asset_code }}</div>
