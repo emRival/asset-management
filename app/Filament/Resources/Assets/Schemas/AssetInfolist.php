@@ -47,7 +47,7 @@ class AssetInfolist
                                     SpatieMediaLibraryImageEntry::make('asset_images')
                                         ->collection('asset_images')
                                         ->conversion('thumb')
-                                        ->circular()
+                                        ->size(120)
                                         ->stacked()
                                         ->limit(5),
                                     TextEntry::make('qr_code')

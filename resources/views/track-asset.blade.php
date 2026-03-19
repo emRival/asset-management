@@ -59,7 +59,7 @@
 
         <!-- Main Images -->
         @if($asset->hasMedia('asset_images'))
-            <div class="mb-6 flex overflow-x-auto gap-3 snap-x pb-2">
+            <div class="mb-6 flex overflow-x-auto gap-3 snap-x pb-2 justify-center">
                 @foreach($asset->getMedia('asset_images') as $media)
                     <div
                         class="snap-center shrink-0 w-[85%] md:w-2/3 bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100">
