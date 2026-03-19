@@ -119,10 +119,10 @@ class AssetsTable
                         ->label('Print QR Codes')
                         ->icon('heroicon-o-printer')
                         ->deselectRecordsAfterCompletion()
-                        ->action(function (BulkAction $action, Collection $records) {
+                        ->action(function (\Livewire\Component $livewire, Collection $records) {
                             $ids = $records->pluck('id')->join(',');
                             $url = route('assets.print-qr', ['ids' => $ids]);
-                            $action->js("window.open('$url', '_blank')");
+                            $livewire->js("window.open('$url', '_blank')");
                         }),
                     DeleteBulkAction::make(),
                 ]),
