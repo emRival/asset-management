@@ -59,10 +59,11 @@
 
         <!-- Main Images -->
         @if($asset->hasMedia('asset_images'))
-            <div class="mb-6 flex overflow-x-auto gap-3 snap-x pb-2 justify-center">
+            <div class="mb-6 flex overflow-x-auto gap-3 snap-x pb-2">
+                @php $imageCount = $asset->getMedia('asset_images')->count(); @endphp
                 @foreach($asset->getMedia('asset_images') as $media)
                     <div
-                        class="snap-center shrink-0 w-[85%] md:w-2/3 bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100">
+                        class="snap-start shrink-0 w-[85%] md:w-2/3 bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 {{ $imageCount === 1 ? 'mx-auto' : '' }}">
                         <img src="{{ $media->hasGeneratedConversion('thumb') ? $media->getUrl('thumb') . '?v=' . $media->updated_at->timestamp : $media->getUrl() . '?v=' . $media->updated_at->timestamp }}"
                             alt="Asset Image" class="w-full h-48 md:h-64 object-cover">
                     </div>
