@@ -106,6 +106,12 @@ class AssetsTable
                     }),
                 ViewAction::make(),
                 EditAction::make(),
+                Action::make('printQr')
+                    ->label('Print QR')
+                    ->icon('heroicon-o-printer')
+                    ->color('info')
+                    ->url(fn(Asset $record) => route('assets.print-qr', ['ids' => $record->id]))
+                    ->openUrlInNewTab(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
@@ -113,10 +119,11 @@ class AssetsTable
                         ->label('Print QR Codes')
                         ->icon('heroicon-o-printer')
                         ->deselectRecordsAfterCompletion()
-                        ->action(function (Collection $records) {
+                        ->url(function (Collection $records) {
                             $ids = $records->pluck('id')->join(',');
-                            return redirect()->to('/assets/print-qr?ids=' . $ids);
-                        }),
+                            return route('assets.print-qr', ['ids' => $ids]);
+                        })
+                        ->openUrlInNewTab(),
                     DeleteBulkAction::make(),
                 ]),
             ]);
