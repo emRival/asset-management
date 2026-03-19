@@ -88,20 +88,35 @@ class RoleResource extends Resource
                         Toggle::make('create_all_divisions')
                             ->label('Create Assets for All Divisions')
                             ->helperText('Allow users with this role to create assets for any division, regardless of their own assigned division.')
-                            ->afterStateHydrated(fn (Toggle $component, $record) => $component->state($record ? $record->hasPermissionTo('create_all_divisions') : false))
+                            ->afterStateHydrated(function (Toggle $component, $record) {
+                                if (!$record) {
+                                    return $component->state(false);
+                                }
+                                
+                                try {
+                                    return $component->state($record->hasPermissionTo('create_all_divisions'));
+                                } catch (\Exception $e) {
+                                    return $component->state(false);
+                                }
+                            })
+                            ->live()
                             ->dehydrated(false)
                             ->afterStateUpdated(function ($state, $record) {
                                 if (!$record) return;
                                 
-                                Permission::firstOrCreate([
-                                    'name' => 'create_all_divisions',
-                                    'guard_name' => Utils::getFilamentAuthGuard(),
-                                ]);
-                                
-                                if ($state) {
-                                    $record->givePermissionTo('create_all_divisions');
-                                } else {
-                                    $record->revokePermissionTo('create_all_divisions');
+                                try {
+                                    Permission::firstOrCreate([
+                                        'name' => 'create_all_divisions',
+                                        'guard_name' => Utils::getFilamentAuthGuard(),
+                                    ]);
+                                    
+                                    if ($state) {
+                                        $record->givePermissionTo('create_all_divisions');
+                                    } else {
+                                        $record->revokePermissionTo('create_all_divisions');
+                                    }
+                                } catch (\Exception $e) {
+                                    // Log or ignore
                                 }
                             }),
                     ]),
