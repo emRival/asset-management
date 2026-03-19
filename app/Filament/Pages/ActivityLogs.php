@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use Filament\Facades\Filament;
 use Filament\Pages\Page;
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Tables;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
@@ -12,7 +13,7 @@ use Spatie\Activitylog\Models\Activity;
 
 class ActivityLogs extends Page implements HasTable
 {
-    use InteractsWithTable;
+    use InteractsWithTable, HasPageShield;
 
     protected static string|\UnitEnum|null $navigationGroup = 'Administration';
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-clipboard-document-list';

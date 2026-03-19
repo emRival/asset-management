@@ -3,10 +3,12 @@
 namespace App\Filament\Pages;
 
 use Filament\Pages\Page;
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Illuminate\Support\Facades\File;
 
 class SystemLogs extends Page
 {
+    use HasPageShield;
     protected static string|\UnitEnum|null $navigationGroup = 'Administration';
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-document-text';
     protected static ?string $navigationLabel = 'System Logs';

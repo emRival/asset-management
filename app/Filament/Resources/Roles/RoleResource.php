@@ -20,6 +20,8 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Panel;
 use Filament\Resources\Resource;
+use Filament\Forms\Components\Toggle;
+use Spatie\Permission\Models\Permission;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -80,6 +82,29 @@ class RoleResource extends Resource
                             ->columnSpanFull(),
                     ])
                     ->columnSpanFull(),
+                Section::make('Special Permissions')
+                    ->description('Custom operational permissions for specific business logic.')
+                    ->schema([
+                        Toggle::make('create_all_divisions')
+                            ->label('Create Assets for All Divisions')
+                            ->helperText('Allow users with this role to create assets for any division, regardless of their own assigned division.')
+                            ->afterStateHydrated(fn (Toggle $component, $record) => $component->state($record ? $record->hasPermissionTo('create_all_divisions') : false))
+                            ->dehydrated(false)
+                            ->afterStateUpdated(function ($state, $record) {
+                                if (!$record) return;
+                                
+                                Permission::firstOrCreate([
+                                    'name' => 'create_all_divisions',
+                                    'guard_name' => Utils::getFilamentAuthGuard(),
+                                ]);
+                                
+                                if ($state) {
+                                    $record->givePermissionTo('create_all_divisions');
+                                } else {
+                                    $record->revokePermissionTo('create_all_divisions');
+                                }
+                            }),
+                    ]),
                 static::getShieldFormComponents(),
             ]);
     }

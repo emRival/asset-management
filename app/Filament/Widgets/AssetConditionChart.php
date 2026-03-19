@@ -5,9 +5,11 @@ namespace App\Filament\Widgets;
 use App\Models\Asset;
 use Filament\Facades\Filament;
 use Filament\Widgets\ChartWidget;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 
 class AssetConditionChart extends ChartWidget
 {
+    use HasWidgetShield;
     protected ?string $heading = 'Asset Conditions';
     protected static ?int $sort = 2;
 

@@ -8,9 +8,11 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Database\Eloquent\Builder;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 
 class RecentAssetsWidget extends BaseWidget
 {
+    use HasWidgetShield;
     protected static ?int $sort = 3;
     protected int|string|array $columnSpan = 'full';
     protected static ?string $heading = 'Recently Added Assets';

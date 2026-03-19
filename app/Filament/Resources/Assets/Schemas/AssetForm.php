@@ -26,7 +26,7 @@ class AssetForm
                             ->required()
                             ->live()
                             ->default(fn() => auth()->user()->division_id)
-                            ->disabled(fn() => !auth()->user()->hasRole(['super_admin', 'unit_leader']) && auth()->user()->division_id !== null)
+                            ->disabled(fn() => !auth()->user()->hasRole(['super_admin', 'unit_leader']) && !auth()->user()->can('create_all_divisions') && auth()->user()->division_id !== null)
                             ->dehydrated(),
                         Select::make('category_id')
                             ->relationship('category', 'name', modifyQueryUsing: fn(Builder $query, Get $get) => $get('division_id') ? $query->where('division_id', $get('division_id')) : $query)
