@@ -71,7 +71,11 @@ class RoleResource extends Resource
                                     ->placeholder(__('filament-shield::filament-shield.field.team.placeholder'))
                                     /** @phpstan-ignore-next-line */
                                     ->default(Filament::getTenant()?->id)
-                                    ->options(fn(): array => in_array(Utils::getTenantModel(), [null, '', '0'], true) ? [] : Utils::getTenantModel()::pluck('name', 'id')->toArray()),
+                                    ->options(fn(): array => 
+                                        auth()->user()->isSuperAdmin() 
+                                            ? (in_array(Utils::getTenantModel(), [null, '', '0'], true) ? [] : Utils::getTenantModel()::pluck('name', 'id')->toArray())
+                                            : [Filament::getTenant()?->id => Filament::getTenant()?->name]
+                                    ),
                                 static::getSelectAllFormComponent(),
 
                             ])
